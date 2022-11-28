@@ -1,3 +1,9 @@
+<#PSScriptInfo
+.VERSION 1.0
+.GUID 6d6e186b-92e3-4e44-a3a6-1f91b5d0d56f
+.AUTHOR Nate Cohen
+#>
+
 [CmdletBinding()]
 param(
     [Parameter(Mandatory)]
