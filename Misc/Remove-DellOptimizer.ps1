@@ -10,6 +10,16 @@
 
 #Requires -RunAsAdministrator
 
+# Uninstall Dell Optimizer Core
+$ServiceRemove = ($Apps | Where-Object { $_.Displayname -Match "Dell\s?Optimizer\s?Core" })
+$ServiceRemove | ForEach-Object { 
+    $UninstallEXE = ($_.UninstallString -split '"')[1]
+    $UninstallArg = "-silent" + ($_.UninstallString -split '"')[2]
+    Write-Host "Starting removal of $($_.DisplayName)"
+    Start-Process -FilePath $UninstallEXE -ArgumentList $UninstallArg -Wait
+    Write-Host "Removed $($_.DisplayName)"
+}
+
 # Uninstall Dell Optimizer MSI
 $Apps = @()
 $Apps += Get-ItemProperty "HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Uninstall\*"
