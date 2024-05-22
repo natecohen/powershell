@@ -21,16 +21,16 @@ foreach ($role in $directoryRoles) {
 
 					$memberId = $member.id
 					
-					$memberBetaDetails = (Invoke-MgGraphRequest -Method GET -Uri "$uriBeta/users/$memberId`?`$select=signInActivity,onPremisesSyncEnabled")
+					$memberBetaDetails = (Invoke-MgGraphRequest -Method GET -Uri "$uriBeta/users/$memberId")
 
 					$rawAuthMethods = (Invoke-MgGraphRequest -Method GET -Uri "$uri/users/$memberId/authentication/methods").value.("@odata.type")
 					$fmtAuthMethods = $rawAuthMethods | ForEach-Object { [regex]::Match($_, "#microsoft\.graph\.(.*?)AuthenticationMethod").Groups[1].Value }
 					$fmtAuthMethods = $fmtAuthMethods | Sort-Object -Unique
 
 					try {
+     						$getsignInActivity = (Invoke-MgGraphRequest -Method GET -Uri "$uriBeta/users/$memberId`?`$select=signInActivity")
 						$lastSigninUTC = $memberBetaDetails.signInActivity.lastSuccessfulSignInDateTime
 						$lastSigninLocal = [TimeZoneInfo]::ConvertTimeBySystemTimeZoneId($lastSigninUTC, (Get-TimeZone).id)
-
 					} Catch {
 						$lastSigninLocal = "Not Retrievable"
 					}
