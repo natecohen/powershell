@@ -1,3 +1,20 @@
+<#PSScriptInfo
+
+.VERSION 1.0
+
+.GUID 2dec1f91-2c2c-4981-8565-b707b52fe98a
+
+.AUTHOR Nate Cohen
+
+#>
+
+<#
+
+.DESCRIPTION
+ Prevent QuickBooks from installing automagic updates
+
+#>
+
 Get-process qbupdate | stop-process
 Stop-Service -Name "QBUpdateMonitorService" -Force
 Set-Service -Name "QBUpdateMonitorService" -StartupType Disabled
