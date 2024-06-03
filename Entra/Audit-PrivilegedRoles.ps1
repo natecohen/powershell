@@ -1,3 +1,20 @@
+<#PSScriptInfo
+
+.VERSION 1.0
+
+.GUID acd6e464-0393-461c-8440-629c6e5e79c0
+
+.AUTHOR Nate Cohen
+
+#>
+
+<#
+
+.DESCRIPTION
+ Audit account which contain built-in privileged in Entra ID
+
+#>
+
 Connect-MgGraph -NoWelcome -ContextScope Process -Scopes Directory.Read.All, Organization.Read.All, User.Read.All, UserAuthenticationMethod.Read.All, AuditLog.Read.All
 
 $roleNames = @("Application Developer", "Directory Synchronization Accounts", "Directory Writers", "Global Reader", "Partner Tier1 Support", "Partner Tier2 Support", "Security Operator", "Security Reader")
@@ -28,7 +45,7 @@ foreach ($role in $directoryRoles) {
 					$fmtAuthMethods = $fmtAuthMethods | Sort-Object -Unique
 
 					try {
-     						$getsignInActivity = (Invoke-MgGraphRequest -Method GET -Uri "$uriBeta/users/$memberId`?`$select=signInActivity")
+						$getsignInActivity = (Invoke-MgGraphRequest -Method GET -Uri "$uriBeta/users/$memberId`?`$select=signInActivity")
 						$lastSigninUTC = $memberBetaDetails.signInActivity.lastSuccessfulSignInDateTime
 						$lastSigninLocal = [TimeZoneInfo]::ConvertTimeBySystemTimeZoneId($lastSigninUTC, (Get-TimeZone).id)
 					} Catch {
