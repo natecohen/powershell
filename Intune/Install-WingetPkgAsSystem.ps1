@@ -1,5 +1,5 @@
 <#PSScriptInfo
-.VERSION 1.0
+.VERSION 1.1
 .GUID 6d6e186b-92e3-4e44-a3a6-1f91b5d0d56f
 .AUTHOR Nate Cohen
 #>
@@ -64,5 +64,12 @@ if ($ParameterPassthru) {
 Write-Host -ForegroundColor Yellow "Using arguments: $WingetArguments"
 
 $p = Start-Process winget.exe -ArgumentList $WingetArguments -NoNewWindow -Wait -PassThru
+
+if ($p.ExitCode -eq 0x8A150010) {
+    Write-Host "No applicable installer found; retrying without scope."
+    $WingetArguments = $WingetArguments -replace " --scope (\w+)\b",""
+    $p = Start-Process winget.exe -ArgumentList $WingetArguments -NoNewWindow -Wait -PassThru
+}
+
 Write-Host "Exiting with code $($p.ExitCode)"
 exit $p.ExitCode
